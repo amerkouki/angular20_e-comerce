@@ -1,15 +1,17 @@
 import { computed, inject } from "@angular/core";
 import { Product } from "./models/products";
-import { CartItem } from "./models/cat";
 import { patchState, signalMethod, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { produce } from 'immer';
 import { Toaster } from "./services/toaster";
+import { CartItem } from './models/cart-item';
 
 export type EcommerceState = {
     products : Product[];
     category : string;
     wishlistItems : Product[];
     cartItems : CartItem[];
+
+  
 }
 
 export const EcommerceStore = signalStore (
@@ -131,14 +133,15 @@ export const EcommerceStore = signalStore (
           ],
         category :'all',
         wishlistItems : [],
-        cartItems : []
+        cartItems:[]
     } as EcommerceState ),
-    withComputed(({category , products , wishlistItems })=>({
+    withComputed(({category , products , wishlistItems, cartItems })=>({
         filterProducts : computed(()=> {
             if(category() ==='all') return products();
             return products().filter(p => p.category.toLowerCase() === category().toLowerCase());
           }),
-        wishlistCount : computed(()=> wishlistItems().length)
+        wishlistCount : computed(()=> wishlistItems().length),
+        cartCount : computed(()=> cartItems().reduce((acc,item)=> acc +item.quantity,0))
     })),
     withMethods((store,toaster = inject(Toaster))=>({
         setCategory : signalMethod<string>((category : string)=>{
@@ -158,7 +161,21 @@ export const EcommerceStore = signalStore (
           patchState(store, {wishlistItems : store.wishlistItems().filter(p => p.id !== product.id)});
           toaster.success('Remove From Whishlist');
         },
-        clearWishlist: ()=>{ patchState(store,{wishlistItems :[]}); }
+        clearWishlist: ()=>{ patchState(store,{wishlistItems :[]}); },
+
+        addToCart: (product :Product , quantity =1)=>{
+          const existingItemIndex = store.cartItems().findIndex(i => i.product.id === product.id);
+          const updateCartItem = produce(store.cartItems() , (draft)=>{
+            if(existingItemIndex !== -1 ){
+              draft[existingItemIndex].quantity +=quantity;
+              return;
+            }
+
+            draft.push({product,quantity});
+          });
+          patchState(store,{cartItems : updateCartItem});
+          toaster.success(existingItemIndex !==-1 ? 'Product added again' : 'Product added to the cart');
+        }
 
     }))
 )

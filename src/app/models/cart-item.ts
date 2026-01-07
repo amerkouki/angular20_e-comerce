@@ -1,4 +1,4 @@
-import {Product} from "./products";
+import { Product } from './products';
 
 export type CartItem = {
     product :Product;
