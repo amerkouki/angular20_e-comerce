@@ -175,6 +175,39 @@ export const EcommerceStore = signalStore (
           });
           patchState(store,{cartItems : updateCartItem});
           toaster.success(existingItemIndex !==-1 ? 'Product added again' : 'Product added to the cart');
+        },
+        setItemQuantity : (params :{productId:string , quantity :number})=>{
+          const index = store.cartItems().findIndex(c => c.product.id === params.productId);
+          const updated = produce(store.cartItems(),(draft)=>{
+            draft[index].quantity = params.quantity;
+          });
+          patchState(store ,  {cartItems : updated});
+        },
+        
+        addAllWhishlistToCart : ()=>{
+          const updatedCartItems = produce(store.cartItems() ,(draft)=>{
+            store.wishlistItems().forEach(p =>{
+              if( !draft.find(i => i.product.id === p.id)){
+                  draft.push({product: p , quantity:1});
+              }
+            })
+          });
+
+          patchState(store , {cartItems :updatedCartItems , wishlistItems :[]});
+        },
+
+        moveToWhislist:(product :Product)=>{
+          const updateCartItem = store.cartItems().filter(p => p.product.id !== product.id);
+          const updateWhishListItem =  produce(store.wishlistItems(),(draft)=>{
+            if(!draft.find(i => i.id === product.id)){
+              draft.push(product);
+            }
+          });
+          patchState(store ,{cartItems:updateCartItem , wishlistItems : updateWhishListItem});
+        } ,
+
+        removeFromCartItems : (product:Product)=>{
+          patchState(store, {cartItems: store.cartItems().filter(p => p.product.id !== product.id)});
         }
 
     }))
