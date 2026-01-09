@@ -1,0 +1,37 @@
+<div class="p-8 max-w-[400px] flex flex-col">
+    <div class="flex justify-between">
+        <div>
+            <h2 class="text-xl font-medium mb-1">Sign In</h2>
+            <p class="text-sm text-gray-500">Sign in to your account to continue shopping</p>
+        </div>
+        <button tabindex="-1" matIconButton mat-dialog-close class="-mt2 -mr-2">
+            <mat-icon >close</mat-icon>
+        </button>
+    </div>
+    <form [formGroup]="signUpForm" class="mt-6 flex flex-col" (ngSubmit)="signUp()">
+        <mat-form-field class="w-full mb-4">
+            <input matInput  formControlName="name" type="text" placeholder="Enter your name"/>
+            <mat-icon matPrefix >person</mat-icon>
+        </mat-form-field>
+        <mat-form-field class="mb-4">
+            <input matInput formControlName="email" type="email" placeholder="Enter your email"/>
+            <mat-icon matPrefix >email</mat-icon>
+        </mat-form-field>
+        <mat-form-field class=" mb-4">
+            <input matInput formControlName="password" type="password" placeholder="Enter your password"/>
+            <mat-icon matPrefix >lock</mat-icon>
+        </mat-form-field>
+        <mat-form-field class=" mb-4">
+            <input matInput formControlName="configPassword" type="password" placeholder="Confirm your password"/>
+            <mat-icon matPrefix >lock</mat-icon>
+        </mat-form-field>
+        <button class="w-full" type="submit" matButton="filled" >
+        Create Accout
+        </button>
+
+        <p class="text-sm text-gray-500 mt-2 text-center">
+           Already have an Accout?
+            <a class="text-blue-600 cursor-pointer" (click)="openSignInDialog()">Sign Up</a>
+        </p>
+    </form>
+</div>

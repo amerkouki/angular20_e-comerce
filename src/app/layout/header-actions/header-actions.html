@@ -7,10 +7,28 @@
     [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0">
         <mat-icon>shopping_cart</mat-icon>
     </button>
-    <button matButton>
-        Sign In
-    </button>
-    <button matButton="filled">
-        Sign Up
-    </button>
+    @if (store.user(); as user) {
+        <button matIconButton [matMenuTriggerFor]="userMenu">
+            <img [src]="user.imageUrl" [alt]="user.name" class="w-8 h-8 rounded-full"/>
+        </button> 
+        <mat-menu #userMenu="matMenu"  xposition="before">
+            <div class="flax flex-col px-3 mon-w-[200px]">
+                <span class="text-sm font-meduim">{{user.name}}</span>
+                <div class="span text-xs text-gray-500">{{user.email}}</div>
+            </div>
+            <mat-divider></mat-divider>
+            <button class="-min-h-[32px]" mat-menu-item (click)="store.signOut()">
+                <mat-icon>logout</mat-icon>
+                Sign Out
+            </button>
+        </mat-menu>
+    }
+    @else {
+        <button matButton (click)="openSignInDialog()">
+             Sign In
+         </button>
+        <button matButton="filled" (click)="openSignUpDialog()">
+            Sign Up
+        </button>
+    }   
 </div>

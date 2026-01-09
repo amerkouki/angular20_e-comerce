@@ -7,7 +7,13 @@
             <app-list-cart-items/>
         </div>
         <div class="">
-            <app-sammarize-order/>
+            <app-sammarize-order>
+                <ng-container actionButtons>
+                    <button matButton="filled" class="w-full mt-6 py-3" (click)="store.proceedToCheckout()">
+                        Proceed To Checkout
+                    </button>
+                </ng-container>
+            </app-sammarize-order>
         </div>
     </div>
 </div>
