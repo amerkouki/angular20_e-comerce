@@ -1,5 +1,10 @@
 <div  appViewPanel class="">
     <h2 class="text-2xl font-bold mb-4">Order Sammary</h2>
+    
+    <div class="space-y-2 border-b pb-4 ">
+        <ng-content select="[checkoutItems]"/>
+    </div>
+    
     <div class="space-y-3 text-lg bt-4">
         <div class="flex justify-between">
             <span>SubTotal</span>
