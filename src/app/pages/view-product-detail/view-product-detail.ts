@@ -17,5 +17,5 @@ export  default class ViewProductDetail {
     this.store.setProductId(this.productId);
   }
   
-  backRoute = computed(()=>'/produxts/${this.store.category()}')
+  backRoute = computed(()=>'/products/'+this.store.category())
 }
